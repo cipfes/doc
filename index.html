@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Documento Válido – NETWORKS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #ffffff;
+      --gray-light: #f5f5f5;
+      --gray-mid: #e0e0e0;
+      --gray-text: #555;
+      --accent: #1a1a1a;
+      --green: #2ecc71;
+      --green-dark: #27ae60;
+    }
+
+    body {
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Animated background nodes */
+    .bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .node {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.05; transform: scale(1); }
+      50% { opacity: 0.15; transform: scale(1.2); }
+    }
+
+    /* Card */
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--white);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 32px 80px rgba(0,0,0,0.7);
+      animation: slideUp 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Header strip */
+    .card-header {
+      background: var(--black);
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 3px solid var(--green);
+      overflow: hidden;
+    }
+
+    /* Logo text recreation (in case logo image fails) */
+    .logo-wrap {
+      display: block;
+      width: 100%;
+    }
+
+    .logo-img {
+      height: auto;
+      width: 100%;
+      max-width: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Body */
+    .card-body {
+      padding: 32px 32px 36px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    /* Valid badge */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #eafaf1;
+      border: 2px solid var(--green);
+      border-radius: 100px;
+      padding: 8px 22px;
+      animation: badgePop 0.5s 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes badgePop {
+      from { opacity: 0; transform: scale(0.7); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .badge-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 1.5s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .badge-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--green-dark);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Divider */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--gray-mid);
+    }
+
+    /* Info grid */
+    .info-grid {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .info-row {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .info-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #999;
+    }
+
+    .info-value {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: 0.3px;
+      word-break: break-word;
+    }
+
+    /* Footer note */
+    .footer-note {
+      font-size: 12px;
+      color: var(--gray-text);
+      text-align: center;
+      line-height: 1.6;
+      padding: 0 4px;
+    }
+
+    /* Bottom strip */
+    .card-footer {
+      background: var(--black);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .footer-brand {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 1px;
+    }
+
+    .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--green); }
+
+    .footer-url {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,0.35);
+      letter-spacing: 0.5px;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .card-body { padding: 24px 20px 28px; }
+      .card-header { padding: 22px 20px 18px; }
+      .card-footer { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background nodes -->
+  <div class="bg-canvas">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+      <!-- Static node lines decoration -->
+      <line x1="10%" y1="20%" x2="35%" y2="45%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="35%" y1="45%" x2="60%" y2="15%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="60%" y1="15%" x2="85%" y2="40%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="15%" y1="70%" x2="45%" y2="85%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="45%" y1="85%" x2="75%" y2="65%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <line x1="75%" y1="65%" x2="90%" y2="80%" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+      <circle cx="10%" cy="20%" r="3" fill="rgba(46,204,113,0.2)" filter="url(#glow)"/>
+      <circle cx="35%" cy="45%" r="3" fill="rgba(46,204,113,0.15)"/>
+      <circle cx="60%" cy="15%" r="3" fill="rgba(46,204,113,0.2)"/>
+      <circle cx="85%" cy="40%" r="3" fill="rgba(46,204,113,0.15)"/>
+      <circle cx="15%" cy="70%" r="3" fill="rgba(46,204,113,0.2)"/>
+      <circle cx="45%" cy="85%" r="3" fill="rgba(46,204,113,0.15)"/>
+      <circle cx="75%" cy="65%" r="3" fill="rgba(46,204,113,0.2)"/>
+      <circle cx="90%" cy="80%" r="3" fill="rgba(46,204,113,0.15)"/>
+    </svg>
+  </div>
+
+  <div class="card">
+    <!-- Logo header -->
+    <div class="card-header">
+      <div class="logo-wrap">
+        <img
+          src="https://raw.githubusercontent.com/cipfes/doc/main/LOGO%20EMPRESA.png"
+          alt="NETWORKS"
+          class="logo-img"
+          onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block';"
+        />
+        <div id="logo-fallback" style="display:none; font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700; color:#fff; letter-spacing:4px; padding: 28px 32px;">
+          NETW<span style="color:#2ecc71;">O</span>RKS
+        </div>
+      </div>
+    </div>
+
+    <!-- Main content -->
+    <div class="card-body">
+
+      <!-- Valid badge -->
+      <div class="badge">
+        <div class="badge-dot"></div>
+        <span class="badge-text">Documento Válido</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Data fields -->
+      <div class="info-grid">
+        <div class="info-row">
+          <span class="info-label">Emitido el</span>
+          <span class="info-value">09/04/2026 &nbsp;17:12:47</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Nombre de funcionario</span>
+          <span class="info-value">NIPSON FREDDY MALDONADO SIMBAÑA</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Cédula de funcionario</span>
+          <span class="info-value">1756271514</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">Entidad emisora</span>
+          <span class="info-value">NETWORKS</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <p class="footer-note">
+        La información se ha emitido de conformidad a los sistemas
+        informáticos de Talento Humano y los documentos que constan en
+        los archivos de expedientes que reposan en <strong>NETWORKS</strong>.
+      </p>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="card-footer">
+      <span class="footer-brand">NETWORKS</span>
+      <div class="footer-dot"></div>
+      <span class="footer-url">verificación oficial</span>
+    </div>
+  </div>
+
+</body>
+</html>
